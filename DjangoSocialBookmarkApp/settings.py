@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 import environ
+from django.urls import reverse_lazy
+
+ABSOLUTE_URL_OVERRIDES = {
+    'auth.user': lambda u: reverse_lazy('user_detail', args=[u.username])
+}
 
 # Initialise environment variables
 env = environ.Env()
@@ -46,10 +51,12 @@ INSTALLED_APPS = [
 
     # local
     'images.apps.ImagesConfig',
+    'actions.apps.ActionsConfig',
 
     # third party
     'social_django',
     'django_extensions',
+    'easy_thumbnails',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -75,6 +82,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'common.middlewares.AjaxMiddleware',
 ]
 
 ROOT_URLCONF = 'DjangoSocialBookmarkApp.urls'
@@ -160,3 +168,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6397
+REDIS_DB = 0
